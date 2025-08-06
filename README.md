@@ -5,4 +5,3 @@
 Just a collection of shell scripts I use.
 
 Scripts that use configuration files expect them under `~/.config/shell-scripts`.
->>>>>>> 64e8178 (chore: import scripts)
