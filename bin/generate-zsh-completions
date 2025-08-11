@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+#
+# Run applications to generate completions fox Zsh.
+#
+# The file should contain one command per line
+
+set -e -o pipefail
+
+
+completion_list="$HOME/.config/shell-scripts/zsh-completions.txt"
+outdir="$HOME/.zsh-autoload"
+
+function message() {
+    echo $@ >&2
+}
+
+if [[ ! -f $completion_list ]]; then
+    message "No completion found"
+    return 0
+fi
+
+if [[ ! -e $outdir ]]; then
+    mkdir -p $outdir
+fi
+
+lines=( "${(@f)$(cat $completion_list)}" )
+for line in $lines[@]; do
+    cmdline=(${=line})
+    cmd=$cmdline[1]
+    if ! command -v $cmd >/dev/null; then
+        message "Executable not found: $cmd"
+        continue
+    fi
+    $cmdline >"$outdir/_$cmd"
+done
