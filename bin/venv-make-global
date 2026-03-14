@@ -4,10 +4,12 @@
 
 set -e -o pipefail
 
-requirements_file="$HOME/.config/shell-scripts/requirements-global.txt"
+requirements_file="${1:-$HOME/.config/shell-scripts/requirements-global.txt}"
 
 if [ ! -e "$requirements_file" ]; then
     echo "Requirements file not found: $requirements_file" >&2
     exit 1
 fi
+
+echo "Using requirements file $requirements_file"
 mkvenv "$HOME/venv" -r "$requirements_file" "$@"
