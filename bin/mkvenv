@@ -14,5 +14,5 @@ if [ -z "$path" ]; then
 fi
 
 shift 1
-python3 -m venv --clear "$path"
-"$path/bin/pip" install --upgrade pip "$@"
+uv venv "$path"
+uv --directory "$path" pip install --exact "$@"
