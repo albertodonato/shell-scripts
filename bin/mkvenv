@@ -14,5 +14,5 @@ if [ -z "$path" ]; then
 fi
 
 shift 1
-uv venv "$path"
+uv venv --clear "$path"
 uv --directory "$path" pip install --exact "$@"
