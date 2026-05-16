@@ -15,4 +15,6 @@ fi
 
 shift 1
 uv venv --clear "$path"
-uv --directory "$path" pip install --exact "$@"
+if [ "$#" -gt 0 ]; then
+    uv --directory "$path" pip install --exact "$@"
+fi
