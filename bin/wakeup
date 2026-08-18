@@ -5,14 +5,14 @@
 # Config file must contain lines in the form "<name> <mac>"
 #
 
-set -e -o pipefail
+set -euo pipefail
 
 CONFIG="$HOME/.config/shell-scripts/wakeonlan.txt"
 
 [ -f "$CONFIG" ] || exit 1
 
 # list hosts
-if [ -z "$1" ]; then
+if [ -z "${1:-}" ]; then
    awk '/^[a-zA-Z]/ { print $1; }' "$CONFIG"
    exit 0
 fi

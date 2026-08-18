@@ -2,7 +2,7 @@
 #
 # Create or update the virtualenv for globally-available Python applications.
 
-set -e -o pipefail
+set -euo pipefail
 
 requirements_file="${1:-$HOME/.config/shell-scripts/requirements-global.txt}"
 

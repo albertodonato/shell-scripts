@@ -2,10 +2,9 @@
 #
 # Decrypt a P7M file.
 
-set -e -o pipefail
+set -euo pipefail
 
-file="$1"
-
+file="${1:-}"
 if [ -z "$file" ]; then
     echo "Missing input file" >&2
     exit 1

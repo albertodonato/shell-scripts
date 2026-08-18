@@ -2,7 +2,7 @@
 #
 # Create a file to be used as a block device.
 
-set -e -o pipefail
+set -euo pipefail
 
 SCRIPT="$(basename "$0")"
 

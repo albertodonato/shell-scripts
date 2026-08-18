@@ -2,7 +2,7 @@
 #
 # Forward ports to the specified host using ssh tunneling.
 
-set -e -o pipefail
+set -euo pipefail
 
 if [ $# -lt 2 ]; then
     echo "  Usage: port-forward <host> <port|local-port:remote-port>..."

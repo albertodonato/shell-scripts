@@ -2,9 +2,9 @@
 #
 # Convert an html file (or URL) to PDF.
 
-set -e -o pipefail
+set -euo pipefail
 
-if [ $# -ne 2 ]; then
+if [ "$#" -ne 2 ]; then
     echo "Usage $(basename "$0") <html> <pdf>" >&2
     exit 1
 fi

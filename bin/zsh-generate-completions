@@ -4,7 +4,7 @@
 #
 # The file should contain one command per line
 
-set -e -o pipefail
+set -euo pipefail
 
 
 completion_list="$HOME/.config/shell-scripts/zsh-completions.txt"

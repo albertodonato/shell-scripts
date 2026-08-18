@@ -2,12 +2,12 @@
 #
 # Create a script with the specified name and interpreter.
 
-set -e -o pipefail
+set -euo pipefail
 
 
 SCRIPTNAME="$(basename "$0")"
 
-filename="$1"
+filename="${1:-}"
 if [ -z "$filename" ]; then
     echo "Usage: $SCRIPTNAME <filename> [interpreter]" >&2
     exit 1
@@ -20,7 +20,7 @@ if [[ "$interpreter" = /* ]]; then
 else
     header="#!/usr/bin/env $interpreter"
     if [[ "$interpreter" = "bash"  || "$interpreter" = "zsh" ]]; then
-       header="$header\n\nset -e -o pipefail"
+       header="$header\n\nset -euo pipefail"
     fi
 fi
 
