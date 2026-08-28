@@ -1,0 +1,40 @@
+#!/usr/bin/env zsh
+#
+# Sync uv tools from the specified list
+#
+
+set -euo pipefail
+
+tools_file="${1:-$HOME/.config/shell-scripts/uv-tools.txt}"
+
+if [[ ! -e "$tools_file" ]]; then
+    echo "Tools file not found: $tools_file" >&2
+    exit 1
+fi
+
+desired_tools=()
+
+# strip extras/version specifiers and normalize to the name uv reports
+tool_name() {
+    local name="${1%%[][=<>!~;]*}"
+    print -r -- "${(L)name//_/-}"
+}
+
+echo "Using tools file $tools_file"
+while read -r line; do
+    (( ${#line} )) || continue
+    [[ "$line" =~ '^[[:space:]]*#' ]] && continue   # also skips indented comments
+    tokens=(${(s: :)line})
+    tool="${tokens[1]}"
+    desired_tools+=($(tool_name $tool))
+    shift tokens
+
+    with=()
+    (( ${#tokens} )) && with=(${tokens/#/--with=})
+    uv tool install -U $tool $with
+done <"$tools_file"
+
+for tool in ${(f)"$(uv tool list | awk '/^[^-]/ {print $1}')"}; do
+    (( ${desired_tools[(Ie)$tool]} )) && continue
+    uv tool uninstall $tool
+done
