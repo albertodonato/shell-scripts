@@ -6,8 +6,10 @@
 
 set -euo pipefail
 
+. ${0:A:h}/_lib configfile
 
-completion_list="$HOME/.config/shell-scripts/zsh-completions.txt"
+completion_list="${1:-$HOME/.config/shell-scripts/zsh-completions.txt}"
+
 outdir="$HOME/.zsh-autoload"
 
 function message() {
@@ -16,20 +18,20 @@ function message() {
 
 if [[ ! -f $completion_list ]]; then
     message "No completion found"
-    return 0
+    exit 0
 fi
 
 if [[ ! -e $outdir ]]; then
     mkdir -p $outdir
 fi
 
-lines=( "${(@f)$(cat $completion_list)}" )
-for line in $lines[@]; do
-    cmdline=(${=line})
-    cmd=$cmdline[1]
+typeset -A completions
+config_entries $completion_list completions
+
+for cmd in ${(k)completions}; do
     if ! command -v $cmd >/dev/null; then
         message "Executable not found: $cmd"
         continue
     fi
-    $cmdline >"$outdir/_$cmd"
+    $cmd ${(s: :)completions[$cmd]} >"$outdir/_$cmd"
 done

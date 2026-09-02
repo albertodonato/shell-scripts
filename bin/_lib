@@ -1,0 +1,23 @@
+# -*- mode: sh; sh-shell: zsh -*-
+#
+# Source library files from the lib/ directory.
+#
+# Usage: . ${0:A:h}/_lib <name>...
+
+_lib_dir="${0:A:h:h}/lib"
+_lib_missing=()
+
+for _lib_name in "$@"; do
+    [[ -f "$_lib_dir/$_lib_name" ]] || _lib_missing+=($_lib_name)
+done
+
+if (( ${#_lib_missing} )); then
+    echo "Library files not found in $_lib_dir: ${_lib_missing[*]}" >&2
+    exit 1
+fi
+
+for _lib_name in "$@"; do
+    . "$_lib_dir/$_lib_name"
+done
+
+unset _lib_dir _lib_missing _lib_name

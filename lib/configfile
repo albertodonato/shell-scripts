@@ -1,0 +1,36 @@
+# -*- mode: sh; sh-shell: zsh -*-
+#
+# config file handling
+#
+
+# Read a config file into an associative array.
+#
+# Usage: config_entries <filename> <varname>
+#
+# Empty lines and comments (also indented ones) are skipped. For each remaining
+# line, the first word is used as key and the rest of the line as value.
+config_entries() {
+    setopt localoptions extendedglob
+
+    local _file="$1"
+    local _varname="$2"
+
+    if [[ ! -r "$_file" ]]; then
+        echo "Config file not found: $_file" >&2
+        return 1
+    fi
+
+    local -A _entries=()
+    local _line _key _value
+    while IFS= read -r _line || [[ -n "$_line" ]]; do
+        _line="${${_line##[[:space:]]#}%%[[:space:]]#}"
+        (( ${#_line} )) || continue
+        [[ "$_line" == \#* ]] && continue
+        _key="${_line%%[[:space:]]*}"
+        _value="${${_line#$_key}##[[:space:]]#}"
+        _entries[$_key]="$_value"
+    done <"$_file"
+
+    typeset -gA "$_varname"
+    set -A "$_varname" "${(kv)_entries[@]}"
+}
